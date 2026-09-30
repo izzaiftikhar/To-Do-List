@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>To-Do List</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p id="today" class="today"></p>
+      <h1>My tasks</h1>
+      <div class="progress" role="progressbar" aria-label="Tasks completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <p id="summary" class="summary" aria-live="polite"></p>
+    </div>
+  </header>
+
+  <main class="card">
+    <div class="add-row">
+      <label for="task-input" class="visually-hidden">New task</label>
+      <input id="task-input" type="text" maxlength="200" placeholder="Add a new task..." autocomplete="off">
+      <button id="add-btn" type="button">Add task</button>
+    </div>
+
+    <p id="error" class="error" role="alert" hidden></p>
+
+    <ul id="task-list" class="task-list"></ul>
+    <p id="empty" class="empty" hidden>Nothing here yet. Add your first task above.</p>
+  </main>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
