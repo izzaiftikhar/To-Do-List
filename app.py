@@ -10,12 +10,21 @@ load_dotenv()
 app = Flask(__name__, static_folder=None)
 
 # Database connection (PostgreSQL)
-database_url = os.getenv("DATABASE_URL")
-if not database_url:
-    raise RuntimeError("DATABASE_URL is not set. Add it to your .env file.")
+# Vercel + Neon provide several variable names, so try a few
+db_error = None
+db_var_used = None
+database_url = None
+for name in ("DATABASE_URL", "POSTGRES_URL", "DATABASE_URL_UNPOOLED"):
+    if os.getenv(name):
+        database_url = os.getenv(name)
+        db_var_used = name
+        break
 
-# Render gives "postgres://" but SQLAlchemy needs "postgresql://"
-if database_url.startswith("postgres://"):
+if not database_url:
+    db_error = "No database URL found (DATABASE_URL is not set)."
+    database_url = "sqlite:///placeholder.db"  # only so the app can start
+elif database_url.startswith("postgres://"):
+    # Some providers give "postgres://" but SQLAlchemy needs "postgresql://"
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
@@ -44,14 +53,26 @@ class Task(db.Model):
 
 
 # Create tables if they don't exist yet
-with app.app_context():
-    db.create_all()
+if not db_error:
+    try:
+        with app.app_context():
+            db.create_all()
+    except Exception as e:
+        db_error = f"{type(e).__name__}: {e}"
 
 
 # Page
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+# Temporary debugging page: shows whether the database connected
+@app.route("/api/health")
+def health():
+    if db_error:
+        return jsonify({"database": "error", "variable_used": db_var_used, "error": db_error}), 500
+    return jsonify({"database": "ok", "variable_used": db_var_used})
 
 
 # Serves public/ files when running locally (Vercel serves them itself)
