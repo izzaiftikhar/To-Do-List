@@ -2,12 +2,12 @@ import os
 from datetime import datetime, timezone
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None)
 
 # Database connection (PostgreSQL)
 database_url = os.getenv("DATABASE_URL")
@@ -20,6 +20,7 @@ if database_url.startswith("postgres://"):
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_pre_ping": True, "pool_recycle": 300}
 
 db = SQLAlchemy(app)
 
@@ -51,6 +52,12 @@ with app.app_context():
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+# Serves public/ files when running locally (Vercel serves them itself)
+@app.route("/<path:filename>")
+def public_files(filename):
+    return send_from_directory("public", filename)
 
 
 # View all tasks
