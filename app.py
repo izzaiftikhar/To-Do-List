@@ -79,9 +79,15 @@ def health():
     return jsonify({"database": "ok", "variable_used": db_var_used})
 
 
-# Serves public/ files when running locally (Vercel serves them itself)
+# Serves files from public/ when running locally (Vercel serves /style.css itself)
 @app.route("/<path:filename>")
 def public_files(filename):
+    return send_from_directory("public", filename)
+
+
+# Also makes url_for('static', filename=...) work, so older templates don't break
+@app.route("/static/<path:filename>", endpoint="static")
+def static_files(filename):
     return send_from_directory("public", filename)
 
 
