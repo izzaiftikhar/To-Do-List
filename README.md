@@ -38,11 +38,5 @@ Tasks are displayed with numbers using `enumerate()`, and the selected task is d
 
 ## How to Run
 
-Make sure Python is installed on your system.
-
-Run the program from the terminal:
-
-```bash
-python todo.py
-
 [Live demo](https://to-do-list-xi-brown.vercel.app)
+
