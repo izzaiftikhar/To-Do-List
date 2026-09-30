@@ -1,406 +1,793 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>To-Do List</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <style>
-:root {
-  --bg: #eef4f1;
-  --hero: #12403f;
-  --hero-soft: #7fc4b6;
-  --surface: #ffffff;
-  --ink: #16302f;
-  --muted: #6f8583;
-  --line: #e1ebe8;
-  --accent: #1f9d8a;
-  --accent-dark: #17796a;
-  --danger: #c2452a;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-* { box-sizing: border-box; }
+    <title>To-Do List</title>
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  line-height: 1.5;
-}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-/* Header */
-.hero {
-  background: var(--hero);
-  color: #fff;
-  padding: 48px 20px 96px;
-}
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
+        rel="stylesheet"
+    >
 
-.hero-inner {
-  max-width: 600px;
-  margin: 0 auto;
-}
+    <style>
+        :root {
+            --bg: #eef4f1;
+            --hero: #12403f;
+            --hero-soft: #7fc4b6;
+            --surface: #ffffff;
+            --ink: #16302f;
+            --muted: #6f8583;
+            --line: #e1ebe8;
+            --accent: #1f9d8a;
+            --accent-dark: #17796a;
+            --danger: #c2452a;
+        }
 
-.today {
-  margin: 0 0 4px;
-  color: var(--hero-soft);
-  font-size: 0.95rem;
-  font-weight: 500;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-h1 {
-  margin: 0 0 24px;
-  font-size: 2.6rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+            line-height: 1.5;
+        }
 
-.progress {
-  height: 8px;
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  overflow: hidden;
-}
+        .hero {
+            background: var(--hero);
+            color: #fff;
+            padding: 36px 20px 96px;
+        }
 
-.progress-fill {
-  width: 0;
-  height: 100%;
-  background: var(--hero-soft);
-  border-radius: 999px;
-  transition: width 0.4s ease;
-}
+        .hero-inner {
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-.summary {
-  margin: 10px 0 0;
-  min-height: 1.5em;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-}
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
 
-/* Card */
-.card {
-  max-width: 600px;
-  margin: -56px auto 48px;
-  padding: 24px;
-  background: var(--surface);
-  border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(18, 64, 63, 0.14);
-}
+        .user-info {
+            color: var(--hero-soft);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
 
-.add-row {
-  display: flex;
-  gap: 10px;
-}
+        .logout-btn {
+            padding: 9px 14px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #fff;
+            font-size: 0.85rem;
+        }
 
-input[type="text"] {
-  flex: 1;
-  min-width: 0;
-  padding: 14px 16px;
-  background: var(--bg);
-  border: 2px solid transparent;
-  border-radius: 10px;
-  font: inherit;
-  color: inherit;
-}
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
 
-input[type="text"]::placeholder { color: var(--muted); }
+        .today {
+            margin: 0 0 4px;
+            color: var(--hero-soft);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
 
-input[type="text"]:focus {
-  outline: none;
-  background: #fff;
-  border-color: var(--accent);
-}
+        h1 {
+            margin: 0 0 24px;
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
 
-button {
-  padding: 14px 22px;
-  border: 0;
-  border-radius: 10px;
-  background: var(--accent);
-  color: #fff;
-  font: inherit;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
+        .progress {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            overflow: hidden;
+        }
 
-button:hover { background: var(--accent-dark); }
-button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .progress-fill {
+            width: 0;
+            height: 100%;
+            background: var(--hero-soft);
+            border-radius: 999px;
+            transition: width 0.4s ease;
+        }
 
-button:focus-visible,
-.task input[type="checkbox"]:focus-visible {
-  outline: 3px solid rgba(31, 157, 138, 0.45);
-  outline-offset: 2px;
-}
+        .summary {
+            margin: 10px 0 0;
+            min-height: 1.5em;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
 
-.error {
-  margin: 12px 0 0;
-  color: var(--danger);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
+        .card {
+            max-width: 600px;
+            margin: -56px auto 48px;
+            padding: 24px;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(18, 64, 63, 0.14);
+        }
 
-/* Tasks */
-.task-list {
-  list-style: none;
-  margin: 20px 0 0;
-  padding: 0;
-}
+        .add-row {
+            display: flex;
+            gap: 10px;
+        }
 
-.task {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 4px;
-  border-bottom: 1px solid var(--line);
-}
+        input[type="text"] {
+            flex: 1;
+            min-width: 0;
+            padding: 14px 16px;
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            font: inherit;
+            color: inherit;
+        }
 
-.task:last-child { border-bottom: 0; }
+        input[type="text"]::placeholder {
+            color: var(--muted);
+        }
 
-.task input[type="checkbox"] {
-  appearance: none;
-  flex: none;
-  width: 24px;
-  height: 24px;
-  border: 2px solid #b9cdc9;
-  border-radius: 50%;
-  cursor: pointer;
-  display: grid;
-  place-content: center;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
+        input[type="text"]:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--accent);
+        }
 
-.task input[type="checkbox"]:hover { border-color: var(--accent); }
+        button {
+            padding: 14px 22px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #fff;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
 
-.task input[type="checkbox"]:checked {
-  background: var(--accent);
-  border-color: var(--accent);
-}
+        button:hover {
+            background: var(--accent-dark);
+        }
 
-.task input[type="checkbox"]:checked::after {
-  content: "";
-  width: 6px;
-  height: 11px;
-  border: solid #fff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg) translate(-1px, -1px);
-}
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
-.task-title {
-  flex: 1;
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
+        button:focus-visible,
+        .task input[type="checkbox"]:focus-visible {
+            outline: 3px solid rgba(31, 157, 138, 0.45);
+            outline-offset: 2px;
+        }
 
-.task.done .task-title {
-  color: var(--muted);
-  text-decoration: line-through;
-}
+        .error {
+            margin: 12px 0 0;
+            color: var(--danger);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
 
-.delete-btn {
-  padding: 6px 10px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.85rem;
-  font-weight: 500;
-}
+        .task-list {
+            list-style: none;
+            margin: 20px 0 0;
+            padding: 0;
+        }
 
-.delete-btn:hover {
-  background: #fbebe6;
-  color: var(--danger);
-}
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 4px;
+            border-bottom: 1px solid var(--line);
+        }
 
-.empty {
-  margin: 28px 0 8px;
-  color: var(--muted);
-  text-align: center;
-}
+        .task:last-child {
+            border-bottom: 0;
+        }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
+        .task input[type="checkbox"] {
+            appearance: none;
+            flex: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #b9cdc9;
+            border-radius: 50%;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
 
-[hidden] { display: none !important; }
+        .task input[type="checkbox"]:hover {
+            border-color: var(--accent);
+        }
 
-@media (max-width: 480px) {
-  .hero { padding: 36px 16px 88px; }
-  h1 { font-size: 2.1rem; }
-  .card { margin-left: 12px; margin-right: 12px; padding: 18px; }
-  .add-row { flex-direction: column; }
-}
+        .task input[type="checkbox"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
 
-@media (prefers-reduced-motion: reduce) {
-  .progress-fill, button, .task input[type="checkbox"] { transition: none; }
-}
-  </style>
+        .task input[type="checkbox"]:checked::after {
+            content: "";
+            width: 6px;
+            height: 11px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg) translate(-1px, -1px);
+        }
+
+        .task-title {
+            flex: 1;
+            font-weight: 500;
+            overflow-wrap: anywhere;
+        }
+
+        .task.done .task-title {
+            color: var(--muted);
+            text-decoration: line-through;
+        }
+
+        .delete-btn {
+            padding: 6px 10px;
+            background: transparent;
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .delete-btn:hover {
+            background: #fbebe6;
+            color: var(--danger);
+        }
+
+        .empty {
+            margin: 28px 0 8px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 30px 16px 88px;
+            }
+
+            h1 {
+                font-size: 2.1rem;
+            }
+
+            .card {
+                margin-left: 12px;
+                margin-right: 12px;
+                padding: 18px;
+            }
+
+            .add-row {
+                flex-direction: column;
+            }
+
+            .top-bar {
+                align-items: flex-start;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .progress-fill,
+            button,
+            .task input[type="checkbox"] {
+                transition: none;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <header class="hero">
-    <div class="hero-inner">
-      <p id="today" class="today"></p>
-      <h1>My tasks</h1>
-      <div class="progress" role="progressbar" aria-label="Tasks completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
-        <div id="progress-fill" class="progress-fill"></div>
-      </div>
-      <p id="summary" class="summary" aria-live="polite"></p>
-    </div>
-  </header>
 
-  <main class="card">
-    <div class="add-row">
-      <label for="task-input" class="visually-hidden">New task</label>
-      <input id="task-input" type="text" maxlength="200" placeholder="Add a new task..." autocomplete="off">
-      <button id="add-btn" type="button">Add task</button>
-    </div>
+    <header class="hero">
 
-    <p id="error" class="error" role="alert" hidden></p>
+        <div class="hero-inner">
 
-    <ul id="task-list" class="task-list"></ul>
-    <p id="empty" class="empty" hidden>Nothing here yet. Add your first task above.</p>
-  </main>
+            <div class="top-bar">
+                <span id="user-info" class="user-info">
+                    Welcome
+                </span>
 
-  <script>
-const API_URL = "/api/tasks";
+                <button
+                    id="logout-btn"
+                    class="logout-btn"
+                    type="button"
+                >
+                    Logout
+                </button>
+            </div>
 
-const taskInput = document.getElementById("task-input");
-const addBtn = document.getElementById("add-btn");
-const taskList = document.getElementById("task-list");
-const emptyMsg = document.getElementById("empty");
-const errorMsg = document.getElementById("error");
-const summary = document.getElementById("summary");
-const progress = document.getElementById("progress");
-const progressFill = document.getElementById("progress-fill");
+            <p id="today" class="today"></p>
 
-document.getElementById("today").textContent = new Date().toLocaleDateString(
-  "en-US",
-  { weekday: "long", month: "long", day: "numeric" }
-);
+            <h1>My tasks</h1>
 
-function showError(message) {
-  errorMsg.textContent = message;
-  errorMsg.hidden = false;
-}
+            <div
+                class="progress"
+                role="progressbar"
+                aria-label="Tasks completed"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                id="progress"
+            >
+                <div
+                    id="progress-fill"
+                    class="progress-fill"
+                ></div>
+            </div>
 
-function clearError() {
-  errorMsg.hidden = true;
-}
+            <p
+                id="summary"
+                class="summary"
+                aria-live="polite"
+            ></p>
 
-// View tasks
-async function loadTasks() {
-  try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error();
-    renderTasks(await res.json());
-    clearError();
-  } catch {
-    showError("Could not load tasks. Check that the server is running.");
-  }
-}
+        </div>
 
-function renderTasks(tasks) {
-  taskList.innerHTML = "";
+    </header>
 
-  tasks.forEach((task) => {
-    const li = document.createElement("li");
-    li.className = "task" + (task.completed ? " done" : "");
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = task.completed;
-    checkbox.setAttribute("aria-label", "Mark \"" + task.title + "\" as done");
-    checkbox.addEventListener("change", () => toggleTask(task.id));
+    <main class="card">
 
-    const title = document.createElement("span");
-    title.className = "task-title";
-    title.textContent = task.title;
+        <div class="add-row">
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.type = "button";
-    deleteBtn.className = "delete-btn";
-    deleteBtn.textContent = "Delete";
-    deleteBtn.setAttribute("aria-label", "Delete \"" + task.title + "\"");
-    deleteBtn.addEventListener("click", () => deleteTask(task.id));
+            <label
+                for="task-input"
+                class="visually-hidden"
+            >
+                New task
+            </label>
 
-    li.append(checkbox, title, deleteBtn);
-    taskList.appendChild(li);
-  });
+            <input
+                id="task-input"
+                type="text"
+                maxlength="200"
+                placeholder="Add a new task..."
+                autocomplete="off"
+            >
 
-  const doneCount = tasks.filter((t) => t.completed).length;
-  emptyMsg.hidden = tasks.length > 0;
-  summary.textContent = tasks.length
-    ? doneCount + " of " + tasks.length + " done"
-    : "";
+            <button
+                id="add-btn"
+                type="button"
+            >
+                Add task
+            </button>
 
-  const percent = tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0;
-  progressFill.style.width = percent + "%";
-  progress.setAttribute("aria-valuenow", percent);
-}
+        </div>
 
-// Add task
-async function addTask() {
-  const title = taskInput.value.trim();
-  if (!title) {
-    showError("Enter a task before adding it.");
-    return;
-  }
+        <p
+            id="error"
+            class="error"
+            role="alert"
+            hidden
+        ></p>
 
-  addBtn.disabled = true;
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Could not add the task.");
+        <ul
+            id="task-list"
+            class="task-list"
+        ></ul>
 
-    taskInput.value = "";
-    clearError();
-    await loadTasks();
-  } catch (err) {
-    showError(err.message);
-  } finally {
-    addBtn.disabled = false;
-    taskInput.focus();
-  }
-}
+        <p
+            id="empty"
+            class="empty"
+            hidden
+        >
+            Nothing here yet. Add your first task above.
+        </p>
 
-// Mark done / not done
-async function toggleTask(id) {
-  try {
-    const res = await fetch(API_URL + "/" + id, { method: "PATCH" });
-    if (!res.ok) throw new Error();
-    await loadTasks();
-  } catch {
-    showError("Could not update the task.");
-  }
-}
+    </main>
 
-// Delete task
-async function deleteTask(id) {
-  try {
-    const res = await fetch(API_URL + "/" + id, { method: "DELETE" });
-    if (!res.ok) throw new Error();
-    await loadTasks();
-  } catch {
-    showError("Could not delete the task.");
-  }
-}
 
-addBtn.addEventListener("click", addTask);
-taskInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addTask();
-});
+    <script>
 
-loadTasks();
-  </script>
+        const API_URL = "/api/tasks";
+
+        const taskInput = document.getElementById("task-input");
+        const addBtn = document.getElementById("add-btn");
+        const taskList = document.getElementById("task-list");
+        const emptyMsg = document.getElementById("empty");
+        const errorMsg = document.getElementById("error");
+        const summary = document.getElementById("summary");
+        const progress = document.getElementById("progress");
+        const progressFill = document.getElementById("progress-fill");
+        const logoutBtn = document.getElementById("logout-btn");
+        const userInfo = document.getElementById("user-info");
+
+
+        // Today's date
+        document.getElementById("today").textContent =
+            new Date().toLocaleDateString(
+                "en-US",
+                {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+
+
+        // Show error
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.hidden = false;
+        }
+
+
+        // Clear error
+        function clearError() {
+            errorMsg.hidden = true;
+        }
+
+
+        // Handle authentication errors
+        function handleAuthError(response) {
+
+            if (response.status === 401) {
+                window.location.href = "/login";
+                return true;
+            }
+
+            return false;
+        }
+
+
+        // View tasks
+        async function loadTasks() {
+
+            try {
+
+                const res = await fetch(API_URL);
+
+                if (handleAuthError(res)) {
+                    return;
+                }
+
+                if (!res.ok) {
+                    throw new Error(
+                        "Could not load tasks."
+                    );
+                }
+
+                const tasks = await res.json();
+
+                renderTasks(tasks);
+
+                clearError();
+
+            } catch (error) {
+
+                showError(
+                    "Could not load tasks. Check that the server is running."
+                );
+
+            }
+        }
+
+
+        // Render tasks
+        function renderTasks(tasks) {
+
+            taskList.innerHTML = "";
+
+            tasks.forEach((task) => {
+
+                const li = document.createElement("li");
+
+                li.className =
+                    "task" +
+                    (task.completed ? " done" : "");
+
+
+                const checkbox =
+                    document.createElement("input");
+
+                checkbox.type = "checkbox";
+
+                checkbox.checked = task.completed;
+
+                checkbox.setAttribute(
+                    "aria-label",
+                    'Mark "' + task.title + '" as done'
+                );
+
+                checkbox.addEventListener(
+                    "change",
+                    () => toggleTask(task.id)
+                );
+
+
+                const title =
+                    document.createElement("span");
+
+                title.className = "task-title";
+
+                title.textContent = task.title;
+
+
+                const deleteBtn =
+                    document.createElement("button");
+
+                deleteBtn.type = "button";
+
+                deleteBtn.className = "delete-btn";
+
+                deleteBtn.textContent = "Delete";
+
+                deleteBtn.setAttribute(
+                    "aria-label",
+                    'Delete "' + task.title + '"'
+                );
+
+                deleteBtn.addEventListener(
+                    "click",
+                    () => deleteTask(task.id)
+                );
+
+
+                li.append(
+                    checkbox,
+                    title,
+                    deleteBtn
+                );
+
+                taskList.appendChild(li);
+
+            });
+
+
+            const doneCount =
+                tasks.filter(
+                    (task) => task.completed
+                ).length;
+
+
+            emptyMsg.hidden =
+                tasks.length > 0;
+
+
+            summary.textContent =
+                tasks.length
+                    ? doneCount + " of " + tasks.length + " done"
+                    : "";
+
+
+            const percent =
+                tasks.length
+                    ? Math.round(
+                        (doneCount / tasks.length) * 100
+                    )
+                    : 0;
+
+
+            progressFill.style.width =
+                percent + "%";
+
+
+            progress.setAttribute(
+                "aria-valuenow",
+                percent
+            );
+
+        }
+
+
+        // Add task
+        async function addTask() {
+
+            const title =
+                taskInput.value.trim();
+
+
+            if (!title) {
+
+                showError(
+                    "Enter a task before adding it."
+                );
+
+                return;
+            }
+
+
+            addBtn.disabled = true;
+
+
+            try {
+
+                const res = await fetch(
+                    API_URL,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            title: title
+                        })
+                    }
+                );
+
+
+                if (handleAuthError(res)) {
+                    return;
+                }
+
+
+                const data =
+                    await res.json();
+
+
+                if (!res.ok) {
+                    throw new Error(
+                        data.error ||
+                        "Could not add the task."
+                    );
+                }
+
+
+                taskInput.value = "";
+
+                clearError();
+
+                await loadTasks();
+
+            } catch (err) {
+
+                showError(err.message);
+
+            } finally {
+
+                addBtn.disabled = false;
+
+                taskInput.focus();
+
+            }
+
+        }
+
+
+        // Mark task done / not done
+        async function toggleTask(id) {
+
+            try {
+
+                const res =
+                    await fetch(
+                        API_URL + "/" + id,
+                        {
+                            method: "PATCH"
+                        }
+                    );
+
+
+                if (handleAuthError(res)) {
+                    return;
+                }
+
+
+                if (!res.ok) {
+                    throw new Error();
+                }
+
+
+                await loadTasks();
+
+            } catch {
+
+                showError(
+                    "Could not update the task."
+                );
+
+            }
+
+        }
+
+
+        // Delete task
+        async function deleteTask(id) {
+
+            try {
+
+                const res =
+                    await fetch(
+                        API_URL + "/" + id,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                if (handleAuthError(res)) {
+                    return;
+                }
+
+
+                if (!res.ok) {
+                    throw new Error();
+                }
+
+
+                await loadTasks();
+
+            } catch {
+
+                showError(
+                    "Could not delete the task."
+                );
+
+            }
+
+        }
+
+
+        // Logout
+        logoutBtn.addEventListener(
+            "click",
+            () => {
+                window.location.href = "/logout";
+            }
+        );
+
+
+        // Add task button
+        addBtn.addEventListener(
+            "click",
+            addTask
+        );
+
+
+        // Press Enter to add task
+        taskInput.addEventListener(
+            "keydown",
+            (event) => {
+
+                if (event.key === "Enter") {
+                    addTask();
+                }
+
+            }
+        );
+
+
+        // Load tasks when page opens
+        loadTasks();
+
+    </script>
+
 </body>
+
 </html>
+
