@@ -23,9 +23,13 @@ for name in ("DATABASE_URL", "POSTGRES_URL", "DATABASE_URL_UNPOOLED"):
 if not database_url:
     db_error = "No database URL found (DATABASE_URL is not set)."
     database_url = "sqlite:///placeholder.db"  # only so the app can start
-elif database_url.startswith("postgres://"):
-    # Some providers give "postgres://" but SQLAlchemy needs "postgresql://"
-    database_url = database_url.replace("postgres://", "postgresql://", 1)
+else:
+    # Providers give "postgres://" or "postgresql://"; tell SQLAlchemy to use
+    # the psycopg (v3) driver that is listed in requirements.txt
+    for prefix in ("postgres://", "postgresql://"):
+        if database_url.startswith(prefix):
+            database_url = "postgresql+psycopg://" + database_url[len(prefix):]
+            break
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
